@@ -19,13 +19,24 @@ export default class Player {
 		this.defaultX = canvas.width / 2 - (this.width * this.scale) / 2;
 		this.x = this.defaultX;
 		this.y = canvas.height - this.height * this.scale - 70;
-
-		//Short form window.addEventListener
-		onkeydown = this.input;
-		onkeyup = this.input;
 	}
 
-	update() {
+	reset() {
+		this.vx = 0;
+		this.x = this.defaultX;
+		this.lives = this.defaultLives;
+		this.bulletController.bullets = [];
+		this.shoot = false;
+	}
+
+	dies() {
+		this.vx = 0;
+		this.x = this.defaultX;
+		this.lives--;
+	}
+
+	update(keyboard) {
+		this.input(keyboard);
 		this.checkBoundaries();
 		this.shootBullet();
 		this.x += this.vx * this.speed;
@@ -52,17 +63,17 @@ export default class Player {
 		}
 	}
 
-	input = (event) => {
-		switch (event.key) {
+	input(keyboard) {
+		switch (keyboard.key) {
 			case 'ArrowLeft':
-				this.vx = event.type == 'keydown' ? -1 : 0;
+				this.vx = keyboard.type == 'keydown' ? -1 : 0;
 				break;
 			case 'ArrowRight':
-				this.vx = event.type == 'keydown' ? 1 : 0;
+				this.vx = keyboard.type == 'keydown' ? 1 : 0;
 				break;
 			case ' ':
-				this.shoot = event.type === 'keydown' ? true : false;
+				this.shoot = keyboard.type === 'keydown' ? true : false;
 				break;
 		}
-	};
+	}
 }

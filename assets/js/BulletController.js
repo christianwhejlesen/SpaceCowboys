@@ -37,9 +37,8 @@ export default class BulletController {
 	}
 
 	collideWith(object) {
-		const collider = this.bullets.findIndex((bullet) => {
-			bullet.collideWith(object);
-		});
+		const collider = this.bullets.findIndex((bullet) => bullet.collideWith(object));
+
 		if (collider >= 0) {
 			this.bullets.splice(collider, 1);
 			return true;

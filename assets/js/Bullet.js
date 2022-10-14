@@ -26,7 +26,7 @@ export default class Bullet {
 		//  rect1.y < rect2.y + rect2.h &&
 		//  rect1.h + rect1.y > rect2.y
 		//)
-		if (this.x < object.x + object.width && this.x + this.width > object.x && this.y < object.y + object.height && this.y + this.height > object.y) {
+		if (this.x < object.x + object.width * object.scale && this.x + this.width > object.x && this.y < object.y + object.height * object.scale && this.y + this.height > object.y) {
 			return true;
 		}
 		return false;

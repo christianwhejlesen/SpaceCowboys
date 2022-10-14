@@ -18,27 +18,24 @@ export default class EnemyController {
 	defaultVY = 1;
 	bulletSpeed = -3;
 	currentDirection = Direction.right;
-	moveTimerDefault = 80;
+	moveTimerDefault = 1.5;
 	moveTimer = this.moveTimerDefault;
-	bulletTimerDefault = 100;
+	bulletTimerDefault = 5.0;
 	bulletTimer = this.bulletTimerDefault;
-
+	dt = 60 / 1000;
 	enemyRows = [];
 
-	constructor(canvas, bulletController, playerBC) {
+	constructor(canvas, bulletController, playerBC, scoreController) {
 		this.canvas = canvas;
 		this.bulletController = bulletController;
 		this.playerBC = playerBC;
+		this.scoreController = scoreController;
 		this.deathSound = new Audio('../assets/sfx/enemy-death.wav');
-		this.deathSound.volume = 0.5;
-		this.createEnemies();
+		this.deathSound.volume = 0.2;
+		this.createEnemies(); //TODO Change to this.newGame() when finished, seems to fix the reload problem
 	}
 
 	draw(ctx) {
-		this.drawEnemies(ctx);
-	}
-
-	drawEnemies(ctx) {
 		this.enemyRows.flat().forEach((enemy) => {
 			enemy.update(this.vx, this.vy);
 			enemy.draw(ctx);
@@ -54,6 +51,23 @@ export default class EnemyController {
 				}
 			});
 		});
+	}
+
+	clearBullets() {
+		this.vx = 0;
+		this.vy = 0;
+		this.bulletController.bullets = [];
+		this.playerBC.bullets = [];
+	}
+	reset() {
+		this.currentDirection = Direction.right;
+		this.clearBullets();
+		this.createEnemies();
+	}
+
+	newGame() {
+		this.defaultVX = this.defaultVY = 1;
+		this.reset;
 	}
 
 	update() {
@@ -83,12 +97,20 @@ export default class EnemyController {
 			}
 		}
 
-		this.fireBullet();
 		this.checkBulletCollision();
+		this.fireBullet();
+	}
+
+	collideWith(object) {
+		const collider = this.enemyRows.flat().findIndex((enemy) => enemy.collideWith(object));
+		if (collider >= 0) {
+			return true;
+		}
+		return false;
 	}
 
 	fireBullet() {
-		this.bulletTimer--;
+		this.bulletTimer -= this.dt;
 		if (this.bulletTimer <= 0) {
 			this.bulletTimer = this.bulletTimerDefault;
 			const enemies = this.enemyRows.flat();
@@ -105,15 +127,21 @@ export default class EnemyController {
 					this.deathSound.currentTime = 0;
 					this.deathSound.play();
 					enemyRow.splice(index, 1);
+					this.scoreController.update(50);
 				}
 			});
 		});
 		this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0);
+		if (this.enemyRows.length == 0) {
+			this.reset();
+			this.defaultVX += 0.3;
+			this.defaultVY += 0.3;
+		}
 	}
 
 	checkMoveTimer(newDirection) {
-		this.moveTimer--;
-		if (this.moveTimer != 0 || this.currentDirection === newDirection) return;
+		this.moveTimer -= this.dt;
+		if (this.moveTimer > 0 || this.currentDirection === newDirection) return;
 		this.moveTimer = this.moveTimerDefault;
 		this.currentDirection = newDirection;
 	}
