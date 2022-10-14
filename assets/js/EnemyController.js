@@ -24,6 +24,9 @@ export default class EnemyController {
 	bulletTimer = this.bulletTimerDefault;
 	dt = 60 / 1000;
 	enemyRows = [];
+	xOffset = 45;
+	yOffset = 35;
+	enemyArrayWidth = 0;
 
 	constructor(canvas, bulletController, playerBC, scoreController) {
 		this.canvas = canvas;
@@ -47,10 +50,22 @@ export default class EnemyController {
 			this.enemyRows[rowIndex] = [];
 			row.forEach((enemyNumber, enemyIndex) => {
 				if (enemyNumber > 0) {
-					this.enemyRows[rowIndex].push(new Enemy(enemyIndex * 50, rowIndex * 35, enemyNumber));
+					this.enemyRows[rowIndex].push(new Enemy(enemyIndex * this.xOffset + this.enemyArrayWidth, rowIndex * this.yOffset, enemyNumber));
 				}
 			});
 		});
+		if (this.enemyArrayWidth === 0) {
+			this.getCenterOffset();
+		}
+	}
+
+	getCenterOffset() {
+		let rightmost = 0;
+		for (const row of this.enemyRows) {
+			rightmost = row[row.length - 1].x + row[row.length - 1].width > rightmost ? row[row.length - 1].x + row[row.length - 1].width : rightmost;
+		}
+		this.enemyArrayWidth = rightmost / 2;
+		this.createEnemies();
 	}
 
 	clearBullets() {
@@ -66,6 +81,7 @@ export default class EnemyController {
 	}
 
 	newGame() {
+		this.enemyArrayWidth = 0;
 		this.defaultVX = this.defaultVY = 1;
 		this.reset;
 	}
