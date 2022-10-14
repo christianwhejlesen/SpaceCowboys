@@ -4,7 +4,7 @@
 
 ![Space Cowboys](assets/screen.PNG)
 
-I love those old games from my childhood, so I've begone recrating them in JavaScript.
+I love those old games from my childhood, so I've begone recreating them in JavaScript.
 
 This is my first attempt at recreating **'Space Invaders'** from Taito, most people probably knows it from the Atari 2600 game consol.
 
