@@ -75,7 +75,7 @@ function printText(text, forwards) {
 //---UPDATE---//
 function update(dt) {
 	player.update(keyPress);
-	// enemyController.update();
+	enemyController.update();
 	if (enemyBC.collideWith(player) || enemyController.collideWith(player)) {
 		player.dies();
 		enemyController.reset();

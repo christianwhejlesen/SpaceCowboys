@@ -32,7 +32,7 @@ export default class EnemyController {
 		this.scoreController = scoreController;
 		this.deathSound = new Audio('../assets/sfx/enemy-death.wav');
 		this.deathSound.volume = 0.2;
-		this.createEnemies(); //TODO Change to this.newGame() when finished, seems to fix the reload problem
+		this.newGame();
 	}
 
 	draw(ctx) {
