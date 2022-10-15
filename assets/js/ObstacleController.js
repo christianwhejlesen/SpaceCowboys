@@ -33,7 +33,6 @@ export default class ObstacleController {
 					// this.deathSound.currentTime = 0;
 					// this.deathSound.play();
 					obstacle.hit();
-					console.log(`Hello There`);
 				}
 			}
 		});
