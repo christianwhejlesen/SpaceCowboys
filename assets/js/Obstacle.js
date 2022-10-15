@@ -22,7 +22,7 @@ export default class Obstacle {
 		this.obstacle.forEach((column, y) => {
 			column.forEach((row, x) => {
 				ctx.fillStyle = this.color;
-				if (row === 1) {
+				if (row === '@') {
 					ctx.fillRect(x * this.blockSize + this.x, y * this.blockSize + this.y, this.blockSize, this.blockSize);
 				}
 			});

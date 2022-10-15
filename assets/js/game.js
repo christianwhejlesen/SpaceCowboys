@@ -14,8 +14,9 @@ const bg = new Image();
 bg.src = '../assets/gfx/space.png';
 canvas.width = canvas.height = 600;
 let beginText = true;
-const textIncrement = 2;
+const textIncrement = 1;
 let fontSize = 0;
+let gamePaused = true;
 
 //Short form window.addEventListener
 onkeydown = keyboardInput;
@@ -24,7 +25,7 @@ let keyPress = { key: '', type: '' };
 
 //---INSTANTIATIONS---//
 const score = new ScoreController(canvas);
-const playerBC = new BulletController(canvas, 5, 'red', true, '../assets/sfx/shoot.wav');
+const playerBC = new BulletController(canvas, 15, 'red', true, '../assets/sfx/shoot.wav');
 const enemyBC = new BulletController(canvas, 3, 'white', true, '../assets/sfx/mixkit-short-laser-gun-shot-1670.wav', 1);
 const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
 const player = new Player(canvas, playerBC);
@@ -35,45 +36,55 @@ function keyboardInput(event) {
 	keyPress.key = event.key;
 	keyPress.type = event.type;
 
-	if (player.lives === 0 && keyPress.key == 'Enter') {
+	if (player.lives === 0 && keyPress.key == 'r') {
 		keyPress = { key: '', type: '' };
-		player.reset();
+		player.newGame();
 		enemyController.newGame();
+		obstacleController.newGame();
+		ScoreController.newGame();
+		gamePaused = true;
+		beginText = true;
+	} else if (gamePaused && keyPress.key == 'Enter') {
+		gamePaused = false;
 		beginText = true;
 	}
 }
 
+//---LEVEL-TEXT---//
+function printText(text, maxFontSize, yOffset, color) {
+	if (beginText) {
+		fontSize = 0;
+		beginText = false;
+	}
+	fontSize = fontSize < maxFontSize ? fontSize + textIncrement : maxFontSize;
+	ctx.fillStyle = color;
+	ctx.font = `${fontSize}px Silkscreen`;
+	ctx.textBaseline = 'middle';
+	ctx.textAlign = 'center';
+	ctx.fillText(text, canvas.width / 2, yOffset);
+}
+
 //---GAME LOOP---//
-function game(dt) {
+function game() {
 	requestAnimationFrame(game);
+	enemyController.gamePaused = gamePaused;
 	draw(ctx);
 	if (player.lives === 0) {
-		printText('GAMEOVER', true);
+		printText('GAME OVER', 80, 130, 'red');
+		printText('PRESS R', 40, 200, 'red');
+		printText('TO RESTART', 40, 270, 'red');
+		gamePaused = true;
 		return;
+	} else if (gamePaused) {
+		printText('ENTER', 40, 260, 'orange');
+		printText('TO', 40, 300, 'lightblue');
+		printText('START', 40, 340, 'lightgreen');
 	}
 	update();
 }
 
-//---LEVEL-TEXT---//
-function printText(text, forwards) {
-	if (beginText) {
-		fontSize = forwards ? 0 : 300;
-		beginText = false;
-	}
-	if (forwards) {
-		fontSize = fontSize < 80 ? fontSize + textIncrement : fontSize;
-	} else {
-		fontSize = fontSize > 0 ? fontSize - textIncrement : fontSize;
-	}
-	ctx.fillStyle = 'red';
-	ctx.font = `${fontSize}px Silkscreen`;
-	ctx.textBaseline = 'middle';
-	ctx.textAlign = 'center';
-	ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-}
-
 //---UPDATE---//
-function update(dt) {
+function update() {
 	player.update(keyPress);
 	enemyController.update();
 	if (enemyBC.collideWith(player) || enemyController.collideWith(player)) {

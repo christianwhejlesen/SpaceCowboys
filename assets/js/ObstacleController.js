@@ -38,7 +38,7 @@ export default class ObstacleController {
 		});
 	}
 
-	reset() {
+	newGame() {
 		this.obstacles.forEach((obstacle) => obstacle.reset());
 	}
 }

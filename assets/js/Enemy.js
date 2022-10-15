@@ -5,7 +5,7 @@ export default class Enemy {
 	xOffset = 0;
 	yOffset = 35;
 	frame = 0;
-	delay = 20;
+	delay = 30;
 	count = 0;
 	largestEnemyWidth = 76; //The width of the widest enemy image in the assets
 

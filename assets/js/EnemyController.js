@@ -27,6 +27,7 @@ export default class EnemyController {
 	xOffset = 45;
 	yOffset = 35;
 	enemyArrayWidth = 0;
+	gamePaused = true;
 
 	constructor(canvas, bulletController, playerBC, scoreController) {
 		this.canvas = canvas;
@@ -40,6 +41,8 @@ export default class EnemyController {
 
 	draw(ctx) {
 		this.enemyRows.flat().forEach((enemy) => {
+			this.vx = this.gamePaused ? 0 : this.vx;
+			this.vy = this.gamePaused ? 0 : this.vy;
 			enemy.update(this.vx, this.vy);
 			enemy.draw(ctx);
 		});
@@ -126,6 +129,7 @@ export default class EnemyController {
 	}
 
 	fireBullet() {
+		if (this.gamePaused) return;
 		this.bulletTimer -= this.dt;
 		if (this.bulletTimer <= 0) {
 			this.bulletTimer = this.bulletTimerDefault;

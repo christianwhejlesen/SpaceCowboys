@@ -13,7 +13,7 @@ export default class Player {
 		this.canvas = canvas;
 		this.width = this.image.width;
 		this.height = this.image.height;
-		this.defaultLives = 3;
+		this.defaultLives = 1;
 		this.lives = this.defaultLives;
 		this.bulletController = bulletController;
 		this.defaultX = canvas.width / 2 - (this.width * this.scale) / 2;
@@ -21,7 +21,7 @@ export default class Player {
 		this.y = canvas.height - this.height * this.scale - 70;
 	}
 
-	reset() {
+	newGame() {
 		this.vx = 0;
 		this.x = this.defaultX;
 		this.lives = this.defaultLives;
