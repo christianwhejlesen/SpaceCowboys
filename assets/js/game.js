@@ -4,7 +4,8 @@ import Player from './Player.js';
 import EnemyController from './EnemyController.js';
 import BulletController from './BulletController.js';
 import ScoreController from './ScoreController.js';
-// import Obstacle from './Obstacle.js';
+import Obstacle from './Obstacle.js';
+import ObstacleController from './ObstacleController.js';
 
 //---SETUP---//
 const canvas = document.getElementById('game');
@@ -27,7 +28,7 @@ const playerBC = new BulletController(canvas, 5, 'red', true, '../assets/sfx/sho
 const enemyBC = new BulletController(canvas, 3, 'white', true, '../assets/sfx/mixkit-short-laser-gun-shot-1670.wav', 1);
 const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
 const player = new Player(canvas, playerBC);
-// const obstacle = new Obstacle(50, 420);
+const obstacleController = new ObstacleController(canvas, 'yellowgreen', playerBC, enemyBC);
 
 //---KEYPRESS LISTENER---//
 function keyboardInput(event) {
@@ -35,8 +36,7 @@ function keyboardInput(event) {
 	keyPress.type = event.type;
 
 	if (player.lives === 0 && keyPress.key == 'Enter') {
-		keyPress.key = '';
-		keyPress.type = '';
+		keyPress = { key: '', type: '' };
 		player.reset();
 		enemyController.newGame();
 		beginText = true;
@@ -104,7 +104,7 @@ function draw(ctx) {
 	enemyBC.draw(ctx);
 
 	//Obstacle
-	// obstacle.draw(ctx);
+	obstacleController.draw(ctx);
 
 	//Decorations
 	ctx.fillStyle = 'darkred';

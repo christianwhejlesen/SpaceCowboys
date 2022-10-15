@@ -3,12 +3,16 @@
 import OBSTACLE from '../json/obstacle.json' assert { type: 'json' };
 
 export default class Obstacle {
-	constructor(posX, posY, blockSize = 3, color = 'red') {
+	blockSize = 3;
+	width = 66;
+	height = 54;
+	scale = 1;
+
+	constructor(posX, posY, color) {
 		this.state = 0;
 		this.obstacle = OBSTACLE.state[this.state].map;
-		this.xOffset = posX;
-		this.yOffset = posY;
-		this.size = blockSize;
+		this.x = posX;
+		this.y = posY;
 		this.color = color;
 		this.destroyed = false;
 	}
@@ -19,7 +23,7 @@ export default class Obstacle {
 			column.forEach((row, x) => {
 				ctx.fillStyle = this.color;
 				if (row === 1) {
-					ctx.fillRect(x * this.size + this.xOffset, y * this.size + this.yOffset, this.size, this.size);
+					ctx.fillRect(x * this.blockSize + this.x, y * this.blockSize + this.y, this.blockSize, this.blockSize);
 				}
 			});
 		});

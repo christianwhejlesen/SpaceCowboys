@@ -26,7 +26,7 @@ export default class Enemy {
 	}
 
 	draw(ctx) {
-		if (this.count === this.delay) {
+		if (this.count >= this.delay) {
 			this.count = 0;
 			this.frame = this.frame === 1 ? 0 : 1;
 		}

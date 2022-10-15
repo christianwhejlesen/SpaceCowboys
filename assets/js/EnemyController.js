@@ -149,9 +149,9 @@ export default class EnemyController {
 		});
 		this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0);
 		if (this.enemyRows.length == 0) {
-			this.reset();
 			this.defaultVX += 0.3;
 			this.defaultVY += 0.3;
+			this.reset();
 		}
 	}
 
