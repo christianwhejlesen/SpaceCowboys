@@ -9,11 +9,12 @@ export default class Enemy {
 	count = 0;
 	largestEnemyWidth = 76; //The width of the widest enemy image in the assets
 
-	constructor(x, y, imageNumber) {
+	constructor(x, y, enemyImage) {
+		this.image = enemyImage;
+		// this.image.src = `../assets/gfx/Invader_${imageNumber}.png`;
+		// this.image = document.getElementById(`Invader_${imageNumber}`);
 		this.x = x;
 		this.y = y;
-		this.image = new Image();
-		this.image.src = `../assets/gfx/Invader_${imageNumber}.png`;
 		this.width = this.image.width / 2;
 		this.height = this.image.height;
 		this.scale = 1;
@@ -32,7 +33,6 @@ export default class Enemy {
 		}
 		this.count++;
 		ctx.drawImage(this.image, this.frame * this.width, 0, this.width, this.height, this.x + this.xOffset + this.padding, this.y + this.yOffset, this.width * this.scale, this.height * this.scale);
-
 		////////////////////////////////////////////////////////////////////
 		// -----SPRITEMAP DRAWING-----
 		// ctx.drawImage(img, sx, sy, sWidth, sHeight, x, y, width, height);

@@ -13,12 +13,13 @@ export default class Player {
 		this.canvas = canvas;
 		this.width = this.image.width;
 		this.height = this.image.height;
-		this.defaultLives = 1;
+		this.defaultLives = 3;
 		this.lives = this.defaultLives;
 		this.bulletController = bulletController;
 		this.defaultX = canvas.width / 2 - (this.width * this.scale) / 2;
 		this.x = this.defaultX;
 		this.y = canvas.height - this.height * this.scale - 70;
+		this.image.onload = () => this.newGame();
 	}
 
 	newGame() {

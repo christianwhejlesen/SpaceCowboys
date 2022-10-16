@@ -1,21 +1,32 @@
 /** @format */
 
-import OBSTACLE from '../json/obstacle.json' assert { type: 'json' };
-
 export default class Obstacle {
 	blockSize = 3;
 	width = 66;
 	height = 54;
 	scale = 1;
+	obstacleState = [];
+	obstacle = [];
+	state = 0;
 
 	constructor(posX, posY, color) {
-		this.state = 0;
-		this.obstacle = OBSTACLE.state[this.state].map;
 		this.x = posX;
 		this.y = posY;
 		this.color = color;
 		this.destroyed = false;
+
+		fetch('../assets/json/obstacle.json')
+			.then(res => res.json())
+			.then(json => {
+				this.obstacleState = json;
+				this.readyConstructor();
+			});
 	}
+
+	readyConstructor() {
+		this.obstacle = this.obstacleState.state[this.state].map;
+	}
+
 
 	draw(ctx) {
 		if (this.destroyed) return;
@@ -32,16 +43,16 @@ export default class Obstacle {
 	reset() {
 		this.state = 0;
 		this.destroyed = false;
-		this.obstacle = OBSTACLE.state[this.state].map;
+		this.obstacle = this.obstacleState.state[this.state].map;
 	}
 
 	hit() {
 		this.state++;
-		if (this.state >= OBSTACLE.state.length) {
+		if (this.state >= this.obstacleState.state.length) {
 			this.destroyed = true;
 			return;
 		}
 
-		this.obstacle = OBSTACLE.state[this.state].map;
+		this.obstacle = this.obstacleState.state[this.state].map;
 	}
 }

@@ -4,32 +4,36 @@ import Player from './Player.js';
 import EnemyController from './EnemyController.js';
 import BulletController from './BulletController.js';
 import ScoreController from './ScoreController.js';
-import Obstacle from './Obstacle.js';
 import ObstacleController from './ObstacleController.js';
 
+
 //---SETUP---//
+const screenRatio = 4 / 3;
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
+canvas.width = 600;
+canvas.height = canvas.width;// / screenRatio;
 const bg = new Image();
 bg.src = '../assets/gfx/space.png';
-canvas.width = canvas.height = 600;
 let beginText = true;
 const textIncrement = 1;
 let fontSize = 0;
 let gamePaused = true;
+
+
+//---INSTANTIATIONS---//
+const score = new ScoreController(canvas);
+const playerBC = new BulletController(canvas, 5, 'red', true, '../assets/sfx/shoot.wav');
+const enemyBC = new BulletController(canvas, 3, 'white', true, '../assets/sfx/enemy-shoot.wav', 1);
+const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
+const player = new Player(canvas, playerBC);
+const obstacleController = new ObstacleController(canvas, 'red', playerBC, enemyBC);
 
 //Short form window.addEventListener
 onkeydown = keyboardInput;
 onkeyup = keyboardInput;
 let keyPress = { key: '', type: '' };
 
-//---INSTANTIATIONS---//
-const score = new ScoreController(canvas);
-const playerBC = new BulletController(canvas, 15, 'red', false, '../assets/sfx/shoot.wav');
-const enemyBC = new BulletController(canvas, 3, 'white', false, '../assets/sfx/mixkit-short-laser-gun-shot-1670.wav', 1);
-const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
-const player = new Player(canvas, playerBC);
-const obstacleController = new ObstacleController(canvas, 'yellowgreen', playerBC, enemyBC);
 
 //---KEYPRESS LISTENER---//
 function keyboardInput(event) {
@@ -50,6 +54,7 @@ function keyboardInput(event) {
 	}
 }
 
+
 //---LEVEL-TEXT---//
 function printText(text, maxFontSize, yOffset, color) {
 	if (beginText) {
@@ -63,6 +68,7 @@ function printText(text, maxFontSize, yOffset, color) {
 	ctx.textAlign = 'center';
 	ctx.fillText(text, canvas.width / 2, yOffset);
 }
+
 
 //---GAME LOOP---//
 function game() {
@@ -83,15 +89,17 @@ function game() {
 	update();
 }
 
+
 //---UPDATE---//
 function update() {
 	player.update(keyPress);
 	enemyController.update();
 	if (enemyBC.collideWith(player) || enemyController.collideWith(player)) {
 		player.dies();
-		enemyController.reset();
+		enemyController.resetGame();
 	}
 }
+
 
 //---DRAW---//
 function draw(ctx) {
@@ -123,7 +131,4 @@ function draw(ctx) {
 }
 
 //Wait for background image to load before continuing
-bg.onload = function () {
-	game();
-};
-
+bg.onload = () => game();
