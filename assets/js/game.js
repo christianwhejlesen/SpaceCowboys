@@ -25,8 +25,8 @@ let keyPress = { key: '', type: '' };
 
 //---INSTANTIATIONS---//
 const score = new ScoreController(canvas);
-const playerBC = new BulletController(canvas, 15, 'red', true, '../assets/sfx/shoot.wav');
-const enemyBC = new BulletController(canvas, 3, 'white', true, '../assets/sfx/mixkit-short-laser-gun-shot-1670.wav', 1);
+const playerBC = new BulletController(canvas, 15, 'red', false, '../assets/sfx/shoot.wav');
+const enemyBC = new BulletController(canvas, 3, 'white', false, '../assets/sfx/mixkit-short-laser-gun-shot-1670.wav', 1);
 const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
 const player = new Player(canvas, playerBC);
 const obstacleController = new ObstacleController(canvas, 'yellowgreen', playerBC, enemyBC);
@@ -41,10 +41,10 @@ function keyboardInput(event) {
 		player.newGame();
 		enemyController.newGame();
 		obstacleController.newGame();
-		ScoreController.newGame();
+		score.newGame();
 		gamePaused = true;
 		beginText = true;
-	} else if (gamePaused && keyPress.key == 'Enter') {
+	} else if (gamePaused && keyPress.key == 'Enter' && player.lives !== 0) {
 		gamePaused = false;
 		beginText = true;
 	}
@@ -126,3 +126,4 @@ function draw(ctx) {
 bg.onload = function () {
 	game();
 };
+

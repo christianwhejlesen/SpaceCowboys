@@ -34,6 +34,7 @@ export default class EnemyController {
 		this.bulletController = bulletController;
 		this.playerBC = playerBC;
 		this.scoreController = scoreController;
+		this.soundEnabled = this.bulletController.soundEnabled;
 		this.deathSound = new Audio('../assets/sfx/enemy-death.wav');
 		this.deathSound.volume = 0.2;
 		this.newGame();
@@ -144,8 +145,10 @@ export default class EnemyController {
 		this.enemyRows.forEach((enemyRow) => {
 			enemyRow.forEach((enemy, index) => {
 				if (this.playerBC.collideWith(enemy)) {
-					this.deathSound.currentTime = 0;
-					this.deathSound.play();
+					if (this.soundEnabled) {
+						this.deathSound.currentTime = 0;
+						this.deathSound.play();
+					}
 					enemyRow.splice(index, 1);
 					this.scoreController.update(50);
 				}
