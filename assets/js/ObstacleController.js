@@ -4,7 +4,7 @@ import Obstacle from './Obstacle.js';
 
 export default class ObstacleController {
 	obstacles = [];
-	obstacleYoffset = 420;
+	obstacleYoffset = 445;
 	obstacleXoffset = 42;
 	obstacleGap = 150;
 	constructor(canvas, color, playerBC, enemyBC) {

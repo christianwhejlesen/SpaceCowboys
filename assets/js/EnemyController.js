@@ -5,11 +5,11 @@ import Direction from './Direction.js';
 export default class EnemyController {
 	//---VARIABLES--//
 	enemyMap = [
-		[2, 2, 2, 2, 2, 2, 2],
-		[1, 1, 2, 2, 2, 1, 1],
-		[1, 1, 1, 1, 1, 1, 1],
-		[3, 3, 3, 3, 3, 3, 3],
-		[0, 1, 3, 3, 3, 1, 0],
+		[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 	];
 
 	vx = 0;
@@ -31,11 +31,15 @@ export default class EnemyController {
 	doneLoadingAssets = false;
 	numberOfAssets = 0;
 	assets = null;
+	level = 0;
+	levelBumpY = 5;
+	basePoint = 10;
 
 	assetsToLoad = [
 		{ id: 1, var: 'Invader_1', src: '../assets/gfx/Invader_1.png' },
 		{ id: 2, var: 'Invader_2', src: '../assets/gfx/Invader_2.png' },
 		{ id: 3, var: 'Invader_3', src: '../assets/gfx/Invader_3.png' },
+		{ id: 4, var: 'Explosion', src: '../assets/gfx/Explosion.png' },
 	];
 
 	constructor(canvas, enemyBC, playerBC, scoreController) {
@@ -47,7 +51,6 @@ export default class EnemyController {
 		this.deathSound = new Audio('../assets/sfx/enemy-death.wav');
 		this.deathSound.volume = 0.2;
 		this.loadAssets();
-		this.newGame();
 
 	}
 
@@ -127,13 +130,14 @@ export default class EnemyController {
 
 	resetGame() {
 		this.currentDirection = Direction.right;
+		this.defaultVX = this.defaultVY = 1;
 		this.clearBullets();
 		this.createEnemies();
 	}
 
 	newGame() {
 		this.enemyArrayWidth = 0;
-		this.defaultVX = this.defaultVY = 1;
+		this.level = 0;
 		this.resetGame();
 	}
 
@@ -144,7 +148,7 @@ export default class EnemyController {
 			row.forEach((enemyNumber, enemyIndex) => {
 				if (enemyNumber > 0) {
 					this.enemyRows[rowIndex].push(new Enemy(enemyIndex * this.xOffset + this.enemyArrayWidth,
-						rowIndex * this.yOffset, eval(`this.Invader_${enemyNumber}`)));
+						rowIndex * this.yOffset + (this.level * this.levelBumpY), eval(`this.Invader_${enemyNumber}`), this.Explosion, enemyNumber * this.basePoint));
 				}
 			});
 		});
@@ -153,7 +157,8 @@ export default class EnemyController {
 			for (const row of this.enemyRows) {
 				rightmost = row[row.length - 1].x + row[row.length - 1].width > rightmost ? row[row.length - 1].x + row[row.length - 1].width : rightmost;
 			}
-			this.enemyArrayWidth = rightmost / 2;
+			this.enemyArrayWidth = (this.canvas.width - rightmost) / 2;
+
 			this.createEnemies();
 
 		}
@@ -194,15 +199,19 @@ export default class EnemyController {
 						this.deathSound.currentTime = 0;
 						this.deathSound.play();
 					}
+					// enemy.hit();
+					enemy.isHit = true;
+					this.scoreController.update(enemy.points);
+				}
+				if (enemy.exploded) {
 					enemyRow.splice(index, 1);
-					this.scoreController.update(50);
+
 				}
 			});
 		});
 		this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0);
 		if (this.enemyRows.length == 0) {
-			this.defaultVX += 0.3;
-			this.defaultVY += 0.3;
+			this.level++;
 			this.resetGame();
 		}
 	}
@@ -220,8 +229,12 @@ export default class EnemyController {
 
 		if (leftmost <= 0 && this.currentDirection === Direction.left) {
 			this.currentDirection = newDirection;
+			this.defaultVX += 0.2;
+			this.defaultVY += 0.1;
 			return;
 		} else if (rightmost >= this.canvas.width && this.currentDirection === Direction.right) {
+			this.defaultVX += 0.2;
+			this.defaultVY += 0.1;
 			this.currentDirection = newDirection;
 			return;
 		}

@@ -5,7 +5,7 @@ export default class Obstacle {
 	width = 66;
 	height = 54;
 	scale = 1;
-	obstacleState = [];
+	obstacleStates = [];
 	obstacle = [];
 	state = 0;
 
@@ -18,13 +18,13 @@ export default class Obstacle {
 		fetch('../assets/json/obstacle.json')
 			.then(result => result.json())
 			.then(json => {
-				this.obstacleState = json;
+				this.obstacleStates = json;
 				this.readyConstructor();
 			});
 	}
 
 	readyConstructor() {
-		this.obstacle = this.obstacleState.state[this.state].map;
+		this.obstacle = this.obstacleStates.state[this.state].map;
 	}
 
 
@@ -43,16 +43,16 @@ export default class Obstacle {
 	reset() {
 		this.state = 0;
 		this.destroyed = false;
-		this.obstacle = this.obstacleState.state[this.state].map;
+		this.obstacle = this.obstacleStates.state[this.state].map;
 	}
 
 	hit() {
 		this.state++;
-		if (this.state >= this.obstacleState.state.length) {
+		if (this.state >= this.obstacleStates.state.length) {
 			this.destroyed = true;
 			return;
 		}
 
-		this.obstacle = this.obstacleState.state[this.state].map;
+		this.obstacle = this.obstacleStates.state[this.state].map;
 	}
 }

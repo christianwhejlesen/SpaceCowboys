@@ -1,4 +1,5 @@
 /** @format */
+
 //---IMPORTS---//
 import Player from './Player.js';
 import EnemyController from './EnemyController.js';
@@ -23,11 +24,11 @@ let firstRun = true;
 
 //---INSTANTIATIONS---//
 const score = new ScoreController(canvas);
-const playerBC = new BulletController(canvas, 5, 'red', true, '../assets/sfx/shoot.wav');
+const playerBC = new BulletController(canvas, 1, 'red', false, '../assets/sfx/shoot.wav');
 const player = new Player(canvas, playerBC);
-const enemyBC = new BulletController(canvas, 3, 'white', true, '../assets/sfx/enemy-shoot.wav', 1);
+const enemyBC = new BulletController(canvas, 3, 'white', false, '../assets/sfx/enemy-shoot.wav', 1);
 const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
-const obstacleController = new ObstacleController(canvas, 'red', playerBC, enemyBC);
+const obstacleController = new ObstacleController(canvas, 'green', playerBC, enemyBC);
 
 //Short form window.addEventListener
 onkeydown = keyboardInput;

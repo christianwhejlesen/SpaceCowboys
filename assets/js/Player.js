@@ -26,7 +26,7 @@ export default class Player {
 		this.height = this.image.height;
 		this.defaultX = this.canvas.width / 2 - (this.width * this.scale) / 2;
 		this.x = this.defaultX;
-		this.y = this.canvas.height - this.height * this.scale - 70;
+		this.y = this.canvas.height - this.height * this.scale - 55;
 	}
 
 	newGame() {

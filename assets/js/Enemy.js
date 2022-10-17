@@ -8,17 +8,32 @@ export default class Enemy {
 	delay = 30;
 	count = 0;
 	largestEnemyWidth = 76; //The width of the widest enemy image in the assets
+	scale = 1;
 
-	constructor(x, y, enemyImage) {
+	//---EXPLOSION---//
+	expCurrentFrame = 0;
+	expFrameDelay = 10;
+	expCount = 0;
+	exploded = false;
+	isHit = false;
+
+
+	constructor(x, y, enemyImage, explosion, points) {
 		this.image = enemyImage;
-		// this.image.src = `../assets/gfx/Invader_${imageNumber}.png`;
-		// this.image = document.getElementById(`Invader_${imageNumber}`);
 		this.x = x;
 		this.y = y;
 		this.width = this.image.width / 2;
 		this.height = this.image.height;
-		this.scale = 1;
+		this.points = points;
 		this.padding = this.width < this.largestEnemyWidth / 2 ? (this.largestEnemyWidth / 2 - this.width) / 2 : 0; //Center up enemies
+		//---EXPLOSION STUFF---//
+		this.explosion = explosion;
+		this.expWidth = (this.explosion.width / 4) - 1;
+		this.expHeight = this.explosion.height;
+		this.expFrames = this.explosion.width / this.expWidth;
+		this.expXPadding = (this.width + this.padding - this.expWidth) / 2;
+		this.expYPadding = (this.height - this.expHeight) / 2;
+
 	}
 
 	update(vx, vy) {
@@ -27,12 +42,36 @@ export default class Enemy {
 	}
 
 	draw(ctx) {
-		if (this.count >= this.delay) {
-			this.count = 0;
-			this.frame = this.frame === 1 ? 0 : 1;
+		if (this.exploded) return;
+		if (!this.isHit) {
+			if (this.count >= this.delay) {
+				this.count = 0;
+				this.frame = this.frame === 1 ? 0 : 1;
+			}
+			this.count++;
+			ctx.drawImage(this.image, this.frame * this.width, 0, this.width, this.height, this.x + this.xOffset + this.padding, this.y + this.yOffset, this.width * this.scale, this.height * this.scale);
+		} else {
+			if (this.expCount >= this.expFrameDelay) {
+				this.expCount = 0;
+				this.expCurrentFrame++;
+			}
+			if (this.expCurrentFrame > this.expFrames) {
+				this.exploded = true;
+				return;
+			}
+			this.expCount++;
+			ctx.drawImage(
+				this.explosion,
+				this.expCurrentFrame * this.expWidth,
+				0,
+				this.expWidth,
+				this.expHeight,
+				this.x + this.xOffset + this.expXPadding,
+				this.y + this.yOffset + this.expYPadding,
+				this.expWidth * this.scale,
+				this.expHeight * this.scale
+			);
 		}
-		this.count++;
-		ctx.drawImage(this.image, this.frame * this.width, 0, this.width, this.height, this.x + this.xOffset + this.padding, this.y + this.yOffset, this.width * this.scale, this.height * this.scale);
 		////////////////////////////////////////////////////////////////////
 		// -----SPRITEMAP DRAWING-----
 		// ctx.drawImage(img, sx, sy, sWidth, sHeight, x, y, width, height);
@@ -57,4 +96,5 @@ export default class Enemy {
 		}
 		return false;
 	}
+
 }
