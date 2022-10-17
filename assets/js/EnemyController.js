@@ -143,22 +143,8 @@ export default class EnemyController {
 			this.enemyRows[rowIndex] = [];
 			row.forEach((enemyNumber, enemyIndex) => {
 				if (enemyNumber > 0) {
-					let enemyImage = null;
-					switch (enemyNumber) {
-						case 1:
-							enemyImage = this.Invader_1;
-							break;
-						case 2:
-							enemyImage = this.Invader_2;
-							break;
-						case 3:
-							enemyImage = this.Invader_3;
-							break;
-						default:
-							enemyImage = this.Invader_1;
-							break;
-					}
-					this.enemyRows[rowIndex].push(new Enemy(enemyIndex * this.xOffset + this.enemyArrayWidth, rowIndex * this.yOffset, enemyImage));
+					this.enemyRows[rowIndex].push(new Enemy(enemyIndex * this.xOffset + this.enemyArrayWidth,
+						rowIndex * this.yOffset, eval(`this.Invader_${enemyNumber}`)));
 				}
 			});
 		});

@@ -19,14 +19,14 @@ let beginText = true;
 const textIncrement = 1;
 let fontSize = 0;
 let gamePaused = true;
-
+let firstRun = true;
 
 //---INSTANTIATIONS---//
 const score = new ScoreController(canvas);
 const playerBC = new BulletController(canvas, 5, 'red', true, '../assets/sfx/shoot.wav');
+const player = new Player(canvas, playerBC);
 const enemyBC = new BulletController(canvas, 3, 'white', true, '../assets/sfx/enemy-shoot.wav', 1);
 const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
-const player = new Player(canvas, playerBC);
 const obstacleController = new ObstacleController(canvas, 'red', playerBC, enemyBC);
 
 //Short form window.addEventListener
@@ -109,14 +109,14 @@ function draw(ctx) {
 	//Background
 	ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 
+	//Player
+	player.draw(ctx);
+
 	//Scoreboard
 	score.draw(ctx);
 
 	//Enemies
 	enemyController.draw(ctx);
-
-	//Player
-	player.draw(ctx);
 
 	//Bullets
 	playerBC.draw(ctx);
@@ -128,6 +128,7 @@ function draw(ctx) {
 	//Decorations
 	ctx.fillStyle = 'darkred';
 	ctx.fillRect(0, 545, canvas.width, 2);
+
 }
 
 //Wait for background image to load before continuing

@@ -16,7 +16,7 @@ export default class Obstacle {
 		this.destroyed = false;
 
 		fetch('../assets/json/obstacle.json')
-			.then(res => res.json())
+			.then(result => result.json())
 			.then(json => {
 				this.obstacleState = json;
 				this.readyConstructor();
