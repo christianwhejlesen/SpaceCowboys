@@ -63,8 +63,6 @@ export default class Player {
 		for (let i = 0; i < this.lives - 1; i++) {
 			ctx.drawImage(this.image, i * 30 + 10, 560, this.width, this.height);
 		}
-		// console.log(this.image);
-
 	}
 
 	shootBullet() {
