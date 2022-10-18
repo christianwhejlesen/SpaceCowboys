@@ -36,8 +36,6 @@ export default class ObstacleController {
 		this.obstacles.forEach((obstacle) => {
 			if (!obstacle.destroyed) {
 				if (this.playerBC.collideWith(obstacle) || this.enemyBC.collideWith(obstacle)) {
-					this.deathSound.currentTime = 0;
-					this.deathSound.play();
 					obstacle.hit();
 				}
 

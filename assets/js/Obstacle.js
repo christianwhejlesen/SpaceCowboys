@@ -4,6 +4,7 @@ export default class Obstacle {
 	obstacleStates = [];
 	obstacle = [];
 	state = 0;
+	scale = 1;
 
 	constructor(posX, posY, color, blockSize = 3) {
 		this.x = posX;
@@ -20,6 +21,8 @@ export default class Obstacle {
 				this.obstacleStates = json;
 				this.readyConstructor();
 			});
+		console.log(this.height);
+
 	}
 
 	readyConstructor() {
