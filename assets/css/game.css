@@ -38,7 +38,7 @@ img {
   position: relative;
   left: 98px;
   top: 77px;
-  background-color: rgba(0, 255, 0, 0.7647058824);
+  background-color: #000000;
   z-index: 2;
 }
 

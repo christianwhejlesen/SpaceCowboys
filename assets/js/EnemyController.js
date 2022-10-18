@@ -248,7 +248,6 @@ export default class EnemyController {
 							this.deathSound.currentTime = 0;
 							this.deathSound.play();
 						}
-						// enemy.hit();
 						enemy.isHit = true;
 						this.scoreController.update(enemy.points);
 					}
