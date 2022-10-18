@@ -58,7 +58,7 @@ export default class UFO {
             ctx.save();
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.font = '20px Silkscreen';
+            ctx.font = '20px c64';
             ctx.fillText(this.points, this.x + this.pointsX, this.y + this.pointsY);
             ctx.restore();
         }

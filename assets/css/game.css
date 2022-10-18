@@ -1,9 +1,13 @@
 /** @format */
+@font-face {
+  font-family: c64;
+  src: url(Commodore_Pixeled.ttf);
+}
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Silkscreen", cursive;
+  font-family: "c64";
 }
 
 body {

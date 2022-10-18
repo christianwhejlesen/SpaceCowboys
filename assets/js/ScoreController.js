@@ -22,7 +22,7 @@ export default class ScoreController {
 
 	draw(ctx) {
 		ctx.fillStyle = this.color;
-		ctx.font = '25px Silkscreen';
+		ctx.font = '25px c64';
 		ctx.textBaseline = 'top';
 		ctx.textAlign = 'start';
 		ctx.fillText('SCORE: ' + this.score, 5, 5);

@@ -64,7 +64,7 @@ function printText(text, maxFontSize, yOffset, color) {
 	}
 	fontSize = fontSize < maxFontSize ? fontSize + textIncrement : maxFontSize;
 	ctx.fillStyle = color;
-	ctx.font = `${fontSize}px Silkscreen`;
+	ctx.font = `${fontSize}px c64`;
 	ctx.textBaseline = 'middle';
 	ctx.textAlign = 'center';
 	ctx.fillText(text, canvas.width / 2, yOffset);
