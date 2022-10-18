@@ -29,4 +29,8 @@ export default class ScoreController {
 		ctx.textAlign = 'end';
 		ctx.fillText(`HIGHSCORE: ${this.highscore}`, this.canvas.width - 5, 5);
 	}
+
+	newGame() {
+		this.score = 0;
+	}
 }

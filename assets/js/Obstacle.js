@@ -1,25 +1,40 @@
 /** @format */
 
-import OBSTACLE from '../json/obstacle.json' assert { type: 'json' };
-
 export default class Obstacle {
-	constructor(posX, posY, blockSize = 3, color = 'red') {
-		this.state = 0;
-		this.obstacle = OBSTACLE.state[this.state].map;
-		this.xOffset = posX;
-		this.yOffset = posY;
-		this.size = blockSize;
+	blockSize = 3;
+	width = 66;
+	height = 54;
+	scale = 1;
+	obstacleStates = [];
+	obstacle = [];
+	state = 0;
+
+	constructor(posX, posY, color) {
+		this.x = posX;
+		this.y = posY;
 		this.color = color;
 		this.destroyed = false;
+
+		fetch('../assets/json/obstacle.json')
+			.then(result => result.json())
+			.then(json => {
+				this.obstacleStates = json;
+				this.readyConstructor();
+			});
 	}
+
+	readyConstructor() {
+		this.obstacle = this.obstacleStates.state[this.state].map;
+	}
+
 
 	draw(ctx) {
 		if (this.destroyed) return;
 		this.obstacle.forEach((column, y) => {
 			column.forEach((row, x) => {
 				ctx.fillStyle = this.color;
-				if (row === 1) {
-					ctx.fillRect(x * this.size + this.xOffset, y * this.size + this.yOffset, this.size, this.size);
+				if (row === '@') {
+					ctx.fillRect(x * this.blockSize + this.x, y * this.blockSize + this.y, this.blockSize, this.blockSize);
 				}
 			});
 		});
@@ -28,16 +43,16 @@ export default class Obstacle {
 	reset() {
 		this.state = 0;
 		this.destroyed = false;
-		this.obstacle = OBSTACLE.state[this.state].map;
+		this.obstacle = this.obstacleStates.state[this.state].map;
 	}
 
 	hit() {
 		this.state++;
-		if (this.state >= OBSTACLE.state.length) {
+		if (this.state >= this.obstacleStates.state.length) {
 			this.destroyed = true;
 			return;
 		}
 
-		this.obstacle = OBSTACLE.state[this.state].map;
+		this.obstacle = this.obstacleStates.state[this.state].map;
 	}
 }

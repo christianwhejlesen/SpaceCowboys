@@ -1,32 +1,33 @@
 /** @format */
 
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Silkscreen', cursive;
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   font-family: 'Silkscreen', cursive;
 }
 body {
-	width: 100vw;
-	height: 100vh;
-	overflow: hidden;
-	background-color: #eee;
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+   width: 100vw;
+   height: 100vh;
+   overflow: hidden;
+   background-color: #eee;
+   overflow: hidden;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
 }
 
 .container {
-	width: 600px;
-	height: 600px;
-	box-shadow: 20px 20px 50px;
-	display: flex;
-	align-items: center;
+   position: relative;
+   width: 600px;
+   height: 600px;
+   box-shadow: 20px 20px 50px;
+   display: flex;
+   align-items: center;
 }
 
 h1 {
-	margin-bottom: 2rem;
-	font-size: 4rem;
+   margin-bottom: 2rem;
+   font-size: 4rem;
 }

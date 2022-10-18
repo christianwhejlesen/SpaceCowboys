@@ -1,86 +1,106 @@
 /** @format */
+
 //---IMPORTS---//
 import Player from './Player.js';
 import EnemyController from './EnemyController.js';
 import BulletController from './BulletController.js';
 import ScoreController from './ScoreController.js';
-// import Obstacle from './Obstacle.js';
+import ObstacleController from './ObstacleController.js';
+
 
 //---SETUP---//
+const screenRatio = 4 / 3;
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
+canvas.width = 600;
+canvas.height = canvas.width;// / screenRatio;
 const bg = new Image();
 bg.src = '../assets/gfx/space.png';
-canvas.width = canvas.height = 600;
 let beginText = true;
-const textIncrement = 2;
+const textIncrement = 1;
 let fontSize = 0;
+let gamePaused = true;
+let firstRun = true;
+
+//---INSTANTIATIONS---//
+const score = new ScoreController(canvas);
+const playerBC = new BulletController(canvas, 35, 'red', false, '../assets/sfx/shoot.wav');
+const player = new Player(canvas, playerBC);
+const enemyBC = new BulletController(canvas, 3, 'white', false, '../assets/sfx/enemy-shoot.wav', 1);
+const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
+const obstacleController = new ObstacleController(canvas, 'green', playerBC, enemyBC);
 
 //Short form window.addEventListener
 onkeydown = keyboardInput;
 onkeyup = keyboardInput;
 let keyPress = { key: '', type: '' };
 
-//---INSTANTIATIONS---//
-const score = new ScoreController(canvas);
-const playerBC = new BulletController(canvas, 5, 'red', true, '../assets/sfx/shoot.wav');
-const enemyBC = new BulletController(canvas, 3, 'white', true, '../assets/sfx/mixkit-short-laser-gun-shot-1670.wav', 1);
-const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
-const player = new Player(canvas, playerBC);
-// const obstacle = new Obstacle(50, 420);
 
 //---KEYPRESS LISTENER---//
 function keyboardInput(event) {
 	keyPress.key = event.key;
 	keyPress.type = event.type;
 
-	if (player.lives === 0 && keyPress.key == 'Enter') {
-		keyPress.key = '';
-		keyPress.type = '';
-		player.reset();
+	if (player.lives === 0 && keyPress.key == 'r') {
+		keyPress = { key: '', type: '' };
+		player.newGame();
 		enemyController.newGame();
+		obstacleController.newGame();
+		score.newGame();
+		gamePaused = false;
+		beginText = true;
+	} else if (gamePaused && keyPress.key == 'Enter' && player.lives !== 0) {
+		gamePaused = false;
 		beginText = true;
 	}
 }
 
+
+//---LEVEL-TEXT---//
+function printText(text, maxFontSize, yOffset, color) {
+	if (beginText) {
+		fontSize = 0;
+		beginText = false;
+	}
+	fontSize = fontSize < maxFontSize ? fontSize + textIncrement : maxFontSize;
+	ctx.fillStyle = color;
+	ctx.font = `${fontSize}px Silkscreen`;
+	ctx.textBaseline = 'middle';
+	ctx.textAlign = 'center';
+	ctx.fillText(text, canvas.width / 2, yOffset);
+}
+
+
 //---GAME LOOP---//
-function game(dt) {
+function game() {
 	requestAnimationFrame(game);
+	enemyController.gamePaused = gamePaused;
 	draw(ctx);
 	if (player.lives === 0) {
-		printText('GAMEOVER', true);
+		printText('GAME OVER', 80, 300, 'red');
+		printText('PRESS R', 40, 370, 'red');
+		printText('TO RESTART', 40, 410, 'red');
+		gamePaused = true;
 		return;
+	} else if (gamePaused) {
+		printText('ENTER', 40, 260, 'orange');
+		printText('TO', 40, 300, 'lightblue');
+		printText('START', 40, 340, 'lightgreen');
 	}
 	update();
 }
 
-//---LEVEL-TEXT---//
-function printText(text, forwards) {
-	if (beginText) {
-		fontSize = forwards ? 0 : 300;
-		beginText = false;
-	}
-	if (forwards) {
-		fontSize = fontSize < 80 ? fontSize + textIncrement : fontSize;
-	} else {
-		fontSize = fontSize > 0 ? fontSize - textIncrement : fontSize;
-	}
-	ctx.fillStyle = 'red';
-	ctx.font = `${fontSize}px Silkscreen`;
-	ctx.textBaseline = 'middle';
-	ctx.textAlign = 'center';
-	ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-}
 
 //---UPDATE---//
-function update(dt) {
+function update() {
 	player.update(keyPress);
 	enemyController.update();
 	if (enemyBC.collideWith(player) || enemyController.collideWith(player)) {
 		player.dies();
-		enemyController.reset();
+		if (player.lives !== 0) enemyController.resetGame();
 	}
 }
+
 
 //---DRAW---//
 function draw(ctx) {
@@ -90,21 +110,21 @@ function draw(ctx) {
 	//Background
 	ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 
+	//Player
+	player.draw(ctx);
+
 	//Scoreboard
 	score.draw(ctx);
 
 	//Enemies
 	enemyController.draw(ctx);
 
-	//Player
-	player.draw(ctx);
-
 	//Bullets
 	playerBC.draw(ctx);
 	enemyBC.draw(ctx);
 
 	//Obstacle
-	// obstacle.draw(ctx);
+	obstacleController.draw(ctx);
 
 	//Decorations
 	ctx.fillStyle = 'darkred';
@@ -112,6 +132,4 @@ function draw(ctx) {
 }
 
 //Wait for background image to load before continuing
-bg.onload = function () {
-	game();
-};
+bg.onload = () => game();
