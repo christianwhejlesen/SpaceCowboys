@@ -1,33 +1,62 @@
 /** @format */
+@font-face {
+  font-family: c64;
+  src: url(Commodore_Pixeled.ttf);
+}
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: "Silkscreen", cursive;
 }
 
 body {
+  box-sizing: border-box;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: #eee;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
-.container {
+img {
+  position: absolute;
+  opacity: 1;
+  max-width: 100%;
+  z-index: 10;
+}
+
+.channel {
+  display: inline-block;
+  position: absolute;
+  width: 1100px;
+  height: 800px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#ITV {
+  width: 730px;
+  height: 570px;
   position: relative;
-  width: 600px;
-  height: 600px;
-  box-shadow: 20px 20px 50px;
-  display: flex;
-  align-items: center;
+  left: 98px;
+  top: 77px;
+  background-color: #000000;
+  z-index: 2;
 }
 
-h1 {
-  margin-bottom: 2rem;
-  font-size: 4rem;
+#game {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.channel::after {
+  content: "";
+  opacity: 1;
+  position: absolute;
+  width: 761px;
+  height: 600px;
+  top: 65px;
+  left: 83px;
+  z-index: 0;
+  background-color: #000000;
 }

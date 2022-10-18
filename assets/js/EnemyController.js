@@ -41,7 +41,7 @@ export default class EnemyController {
 	readyForUFO = false;
 	timeToUFO = 0;
 	ufoOn = false;
-	ufoYOffset = 35;
+	ufoYOffset = 43;
 	ufoScale = 1.5;
 
 
@@ -142,7 +142,7 @@ export default class EnemyController {
 			if (this.enemyRows[0].some((object) => object.y + object.yOffset >= this.ufoYOffset + (this.ufoImage.height * this.ufoScale)) && !this.readyForUFO) {
 				this.readyForUFO = true;
 				this.timeToUFO = Math.floor((Math.random() * 1000) + 1);
-				this.ufoVX = Math.floor((Math.random() * 2) + 1);
+				this.ufoVX = Math.floor((Math.random() * 4) + 1);
 			}
 			if (!this.ufoOn && this.readyForUFO && this.timeToUFO == 0) {
 				this.generateUFO();
@@ -163,6 +163,8 @@ export default class EnemyController {
 		this.ufo = null;
 		this.readyForUFO = false;
 		this.ufoOn = false;
+
+
 
 		this.currentDirection = Direction.right;
 		this.defaultVX = this.defaultVY = 1;
@@ -246,7 +248,6 @@ export default class EnemyController {
 							this.deathSound.currentTime = 0;
 							this.deathSound.play();
 						}
-						// enemy.hit();
 						enemy.isHit = true;
 						this.scoreController.update(enemy.points);
 					}
