@@ -4,7 +4,7 @@ import Obstacle from './Obstacle.js';
 
 export default class ObstacleController {
 	obstacles = [];
-	obstacleYoffset = 445;
+	obstacleYoffset = 433;
 	obstacleBlockSize = 3;
 	obstacleWidth = 22;
 	obstacleHeight = 18;

@@ -12,6 +12,8 @@ import ObstacleController from './ObstacleController.js';
 const container = document.getElementById('ITV').getBoundingClientRect();
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
+// canvas.width = 800;
+// canvas.height = 600;
 canvas.width = container.width;
 canvas.height = container.height;
 const bg = new Image();
@@ -23,9 +25,9 @@ let gamePaused = true;
 
 //---INSTANTIATIONS---//
 const score = new ScoreController(canvas);
-const playerBC = new BulletController(canvas, 5, 'red', false, '../assets/sfx/shoot.wav');
+const playerBC = new BulletController(canvas, 5, 'red', true, '../assets/sfx/shoot.wav');
 const player = new Player(canvas, playerBC);
-const enemyBC = new BulletController(canvas, 3, 'white', false, '../assets/sfx/enemy-shoot.wav', 1);
+const enemyBC = new BulletController(canvas, 3, 'white', true, '../assets/sfx/enemy-shoot.wav', 1);
 const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
 const obstacleController = new ObstacleController(canvas, 'limegreen', playerBC, enemyBC);
 
@@ -76,9 +78,9 @@ function game() {
 	enemyController.gamePaused = gamePaused;
 	draw(ctx);
 	if (player.lives === 0) {
-		printText('GAME OVER', 80, 300, 'red');
-		printText('PRESS R', 40, 370, 'red');
-		printText('TO RESTART', 40, 410, 'red');
+		printText('GAME OVER', 80, 240, 'red');
+		printText('PRESS R', 40, 320, 'orange');
+		printText('TO RESTART', 40, 355, 'orange');
 		gamePaused = true;
 		return;
 	} else if (gamePaused) {
@@ -87,8 +89,10 @@ function game() {
 		printText('START', 30, 320, 'orange');
 		printText('ARROW KEYS TO MOVE', 20, 390, 'limegreen');
 		printText('SPACE TO FIRE', 20, 410, 'limegreen');
+	} else {
+
+		update();
 	}
-	update();
 }
 
 
