@@ -24,7 +24,7 @@ let firstRun = true;
 
 //---INSTANTIATIONS---//
 const score = new ScoreController(canvas);
-const playerBC = new BulletController(canvas, 1, 'red', false, '../assets/sfx/shoot.wav');
+const playerBC = new BulletController(canvas, 35, 'red', false, '../assets/sfx/shoot.wav');
 const player = new Player(canvas, playerBC);
 const enemyBC = new BulletController(canvas, 3, 'white', false, '../assets/sfx/enemy-shoot.wav', 1);
 const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
@@ -47,7 +47,7 @@ function keyboardInput(event) {
 		enemyController.newGame();
 		obstacleController.newGame();
 		score.newGame();
-		gamePaused = true;
+		gamePaused = false;
 		beginText = true;
 	} else if (gamePaused && keyPress.key == 'Enter' && player.lives !== 0) {
 		gamePaused = false;
@@ -77,9 +77,9 @@ function game() {
 	enemyController.gamePaused = gamePaused;
 	draw(ctx);
 	if (player.lives === 0) {
-		printText('GAME OVER', 80, 130, 'red');
-		printText('PRESS R', 40, 200, 'red');
-		printText('TO RESTART', 40, 270, 'red');
+		printText('GAME OVER', 80, 300, 'red');
+		printText('PRESS R', 40, 370, 'red');
+		printText('TO RESTART', 40, 410, 'red');
 		gamePaused = true;
 		return;
 	} else if (gamePaused) {
@@ -97,7 +97,7 @@ function update() {
 	enemyController.update();
 	if (enemyBC.collideWith(player) || enemyController.collideWith(player)) {
 		player.dies();
-		enemyController.resetGame();
+		if (player.lives !== 0) enemyController.resetGame();
 	}
 }
 
@@ -129,7 +129,6 @@ function draw(ctx) {
 	//Decorations
 	ctx.fillStyle = 'darkred';
 	ctx.fillRect(0, 545, canvas.width, 2);
-
 }
 
 //Wait for background image to load before continuing

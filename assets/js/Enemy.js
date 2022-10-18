@@ -12,7 +12,7 @@ export default class Enemy {
 
 	//---EXPLOSION---//
 	expCurrentFrame = 0;
-	expFrameDelay = 10;
+	expFrameDelay = 5;
 	expCount = 0;
 	exploded = false;
 	isHit = false;
@@ -28,9 +28,9 @@ export default class Enemy {
 		this.padding = this.width < this.largestEnemyWidth / 2 ? (this.largestEnemyWidth / 2 - this.width) / 2 : 0; //Center up enemies
 		//---EXPLOSION STUFF---//
 		this.explosion = explosion;
-		this.expWidth = (this.explosion.width / 4) - 1;
+		this.expWidth = this.explosion.width / 4;
 		this.expHeight = this.explosion.height;
-		this.expFrames = this.explosion.width / this.expWidth;
+		this.expFrames = (this.explosion.width / this.expWidth) - 1;
 		this.expXPadding = (this.width + this.padding - this.expWidth) / 2;
 		this.expYPadding = (this.height - this.expHeight) / 2;
 

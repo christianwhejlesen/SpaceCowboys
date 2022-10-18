@@ -1,6 +1,7 @@
 /** @format */
 import Enemy from './Enemy.js';
 import Direction from './Direction.js';
+import UFO from './UFO.js';
 
 export default class EnemyController {
 	//---VARIABLES--//
@@ -34,12 +35,22 @@ export default class EnemyController {
 	level = 0;
 	levelBumpY = 5;
 	basePoint = 10;
+	//UFO
+	ufo = null;
+	ufoVX = 0;
+	readyForUFO = false;
+	timeToUFO = 0;
+	ufoOn = false;
+	ufoYOffset = 35;
+	ufoScale = 1.5;
+
 
 	assetsToLoad = [
 		{ id: 1, var: 'Invader_1', src: '../assets/gfx/Invader_1.png' },
 		{ id: 2, var: 'Invader_2', src: '../assets/gfx/Invader_2.png' },
 		{ id: 3, var: 'Invader_3', src: '../assets/gfx/Invader_3.png' },
 		{ id: 4, var: 'Explosion', src: '../assets/gfx/Explosion.png' },
+		{ id: 5, var: 'ufoImage', src: '../assets/gfx/UFO.png' },
 	];
 
 	constructor(canvas, enemyBC, playerBC, scoreController) {
@@ -95,6 +106,10 @@ export default class EnemyController {
 			enemy.update(this.vx, this.vy);
 			enemy.draw(ctx);
 		});
+
+		if (this.ufo != null && !this.gamePaused) {
+			this.ufo.draw(ctx);
+		}
 	}
 
 	update() {
@@ -123,12 +138,32 @@ export default class EnemyController {
 					break;
 			}
 		}
+		if (this.enemyRows.length != 0) {
+			if (this.enemyRows[0].some((object) => object.y + object.yOffset >= this.ufoYOffset + (this.ufoImage.height * this.ufoScale)) && !this.readyForUFO) {
+				this.readyForUFO = true;
+				this.timeToUFO = Math.floor((Math.random() * 1000) + 1);
+				this.ufoVX = Math.floor((Math.random() * 2) + 1);
+			}
+			if (!this.ufoOn && this.readyForUFO && this.timeToUFO == 0) {
+				this.generateUFO();
+			}
+			this.timeToUFO = this.readyForUFO ? (this.timeToUFO > 0 ? this.timeToUFO - 1 : this.timeToUFO) : this.timeToUFO;
+
+		}
+
+		if (this.ufo != null && this.ufo.exploded) {
+			this.resetUFO();
+		}
 
 		this.checkBulletCollision();
 		this.fireBullet();
 	}
 
 	resetGame() {
+		this.ufo = null;
+		this.readyForUFO = false;
+		this.ufoOn = false;
+
 		this.currentDirection = Direction.right;
 		this.defaultVX = this.defaultVY = 1;
 		this.clearBullets();
@@ -140,8 +175,19 @@ export default class EnemyController {
 		this.level = 0;
 		this.resetGame();
 	}
+	generateUFO() {
+		this.ufo = new UFO(this.canvas, this.ufoYOffset, this.ufoVX, this.ufoImage, this.Explosion, this.ufoScale)
+		this.ufoOn = true;
+	}
+
+	resetUFO() {
+		this.ufo = null;
+		this.readyForUFO = false;
+		this.ufoOn = false;
+	}
 
 	createEnemies() {
+
 		this.enemyRows = [];
 		this.enemyMap.forEach((row, rowIndex) => {
 			this.enemyRows[rowIndex] = [];
@@ -172,7 +218,7 @@ export default class EnemyController {
 	}
 
 	fireBullet() {
-		if (this.gamePaused) return;
+		if (this.gamePaused || this.enemyRows == 0) return;
 		this.bulletTimer -= this.dt;
 		if (this.bulletTimer <= 0) {
 			this.bulletTimer = this.bulletTimerDefault;
@@ -192,27 +238,44 @@ export default class EnemyController {
 	}
 
 	checkBulletCollision() {
-		this.enemyRows.forEach((enemyRow) => {
-			enemyRow.forEach((enemy, index) => {
-				if (this.playerBC.collideWith(enemy)) {
-					if (this.soundEnabled) {
-						this.deathSound.currentTime = 0;
-						this.deathSound.play();
+		if (this.enemyRows != 0) {
+			this.enemyRows.forEach((enemyRow) => {
+				enemyRow.forEach((enemy, index) => {
+					if (this.playerBC.collideWith(enemy)) {
+						if (this.soundEnabled) {
+							this.deathSound.currentTime = 0;
+							this.deathSound.play();
+						}
+						// enemy.hit();
+						enemy.isHit = true;
+						this.scoreController.update(enemy.points);
 					}
-					// enemy.hit();
-					enemy.isHit = true;
-					this.scoreController.update(enemy.points);
-				}
-				if (enemy.exploded) {
-					enemyRow.splice(index, 1);
+					if (enemy.exploded) {
+						enemyRow.splice(index, 1);
 
-				}
+					}
+				});
 			});
-		});
-		this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0);
-		if (this.enemyRows.length == 0) {
+			this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0);
+		}
+
+		if (this.enemyRows.length == 0 && (this.ufo == null || this.ufo.x >= this.canvas.width || this.ufo.x < 0)) {
 			this.level++;
 			this.resetGame();
+		}
+
+		//UFO
+		if (this.ufo == null) return;
+		if (this.playerBC.collideWith(this.ufo)) {
+			if (this.soundEnabled) {
+				this.deathSound.currentTime = 0;
+				this.deathSound.play();
+			}
+			this.ufo.isHit = true;
+			this.scoreController.update(this.ufo.points);
+		}
+		if (this.ufo.exploded) {
+			this.ufo = null;
 		}
 	}
 
@@ -229,12 +292,12 @@ export default class EnemyController {
 
 		if (leftmost <= 0 && this.currentDirection === Direction.left) {
 			this.currentDirection = newDirection;
-			this.defaultVX += 0.2;
-			this.defaultVY += 0.1;
+			this.defaultVX += 0.1;
+			this.defaultVY += 0.05;
 			return;
 		} else if (rightmost >= this.canvas.width && this.currentDirection === Direction.right) {
-			this.defaultVX += 0.2;
-			this.defaultVY += 0.1;
+			this.defaultVX += 0.1;
+			this.defaultVY += 0.05;
 			this.currentDirection = newDirection;
 			return;
 		}
