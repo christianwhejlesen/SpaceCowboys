@@ -61,7 +61,7 @@ export default class Player {
 	draw(ctx) {
 		ctx.drawImage(this.image, this.x, this.y, this.width * this.scale, this.height * this.scale);
 		for (let i = 0; i < this.lives - 1; i++) {
-			ctx.drawImage(this.image, i * 30 + 10, 560, this.width, this.height);
+			ctx.drawImage(this.image, i * 30 + 20, 550, this.width, this.height);
 		}
 	}
 

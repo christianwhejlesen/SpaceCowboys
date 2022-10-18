@@ -9,7 +9,6 @@ import ObstacleController from './ObstacleController.js';
 
 
 //---SETUP---//
-const screenRatio = 4 / 3;
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 canvas.width = 800;
@@ -20,7 +19,6 @@ let beginText = true;
 const textIncrement = 1;
 let fontSize = 0;
 let gamePaused = true;
-let firstRun = true;
 
 //---INSTANTIATIONS---//
 const score = new ScoreController(canvas);

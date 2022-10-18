@@ -41,7 +41,7 @@ export default class EnemyController {
 	readyForUFO = false;
 	timeToUFO = 0;
 	ufoOn = false;
-	ufoYOffset = 35;
+	ufoYOffset = 43;
 	ufoScale = 1.5;
 
 

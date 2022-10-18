@@ -25,9 +25,9 @@ export default class ScoreController {
 		ctx.font = '25px c64';
 		ctx.textBaseline = 'top';
 		ctx.textAlign = 'start';
-		ctx.fillText('SCORE: ' + this.score, 5, 5);
+		ctx.fillText('SCORE: ' + this.score, 15, 10);
 		ctx.textAlign = 'end';
-		ctx.fillText(`HIGHSCORE: ${this.highscore}`, this.canvas.width - 5, 5);
+		ctx.fillText(`HIGHSCORE: ${this.highscore}`, this.canvas.width - 15, 10);
 	}
 
 	newGame() {

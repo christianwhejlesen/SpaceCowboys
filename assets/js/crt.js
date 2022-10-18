@@ -53,8 +53,8 @@ function fakeCRT() {
 
         // Apply WebGL magic
         glcanvas.draw(texture)
-            .bulgePinch(hw, hh, w75, 0.12)
-            .vignette(0.25, 0.74)
+            .bulgePinch(hw, hh, w75, 0.1)
+            .vignette(0.15, 0.54)
             .update();
     }, Math.floor(1000 / 40));
 }
