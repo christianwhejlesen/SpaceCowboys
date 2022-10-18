@@ -9,18 +9,17 @@ import ObstacleController from './ObstacleController.js';
 
 
 //---SETUP---//
-const screenRatio = 4 / 3;
+const container = document.getElementById('ITV').getBoundingClientRect();
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-canvas.width = 600;
-canvas.height = canvas.width;// / screenRatio;
+canvas.width = container.width;
+canvas.height = container.height;
 const bg = new Image();
 bg.src = '../assets/gfx/space.png';
 let beginText = true;
 const textIncrement = 1;
 let fontSize = 0;
 let gamePaused = true;
-let firstRun = true;
 
 //---INSTANTIATIONS---//
 const score = new ScoreController(canvas);
@@ -28,7 +27,7 @@ const playerBC = new BulletController(canvas, 5, 'red', false, '../assets/sfx/sh
 const player = new Player(canvas, playerBC);
 const enemyBC = new BulletController(canvas, 3, 'white', false, '../assets/sfx/enemy-shoot.wav', 1);
 const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
-const obstacleController = new ObstacleController(canvas, 'green', playerBC, enemyBC);
+const obstacleController = new ObstacleController(canvas, 'limegreen', playerBC, enemyBC);
 
 //Short form window.addEventListener
 onkeydown = keyboardInput;
@@ -64,7 +63,7 @@ function printText(text, maxFontSize, yOffset, color) {
 	}
 	fontSize = fontSize < maxFontSize ? fontSize + textIncrement : maxFontSize;
 	ctx.fillStyle = color;
-	ctx.font = `${fontSize}px Silkscreen`;
+	ctx.font = `${fontSize}px c64`;
 	ctx.textBaseline = 'middle';
 	ctx.textAlign = 'center';
 	ctx.fillText(text, canvas.width / 2, yOffset);
@@ -83,9 +82,11 @@ function game() {
 		gamePaused = true;
 		return;
 	} else if (gamePaused) {
-		printText('ENTER', 40, 260, 'orange');
-		printText('TO', 40, 300, 'lightblue');
-		printText('START', 40, 340, 'lightgreen');
+		printText('PRESS ENTER', 30, 260, 'orange');
+		printText('TO', 30, 290, 'orange');
+		printText('START', 30, 320, 'orange');
+		printText('ARROW KEYS TO MOVE', 20, 390, 'limegreen');
+		printText('SPACE TO FIRE', 20, 410, 'limegreen');
 	}
 	update();
 }
@@ -128,7 +129,7 @@ function draw(ctx) {
 
 	//Decorations
 	ctx.fillStyle = 'darkred';
-	ctx.fillRect(0, 545, canvas.width, 2);
+	ctx.fillRect(0, 530, canvas.width, 2);
 }
 
 //Wait for background image to load before continuing

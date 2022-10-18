@@ -1,18 +1,18 @@
 /** @format */
 
 export default class Obstacle {
-	blockSize = 3;
-	width = 66;
-	height = 54;
-	scale = 1;
 	obstacleStates = [];
 	obstacle = [];
 	state = 0;
+	scale = 1;
 
-	constructor(posX, posY, color) {
+	constructor(posX, posY, color, blockSize = 3) {
 		this.x = posX;
 		this.y = posY;
 		this.color = color;
+		this.blockSize = blockSize;
+		this.width = 22 * this.blockSize;
+		this.height = 18 * this.blockSize;
 		this.destroyed = false;
 
 		fetch('../assets/json/obstacle.json')
@@ -21,10 +21,13 @@ export default class Obstacle {
 				this.obstacleStates = json;
 				this.readyConstructor();
 			});
+		console.log(this.height);
+
 	}
 
 	readyConstructor() {
 		this.obstacle = this.obstacleStates.state[this.state].map;
+
 	}
 
 
