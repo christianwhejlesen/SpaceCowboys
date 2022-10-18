@@ -10,6 +10,8 @@ export default class Obstacle {
 		this.y = posY;
 		this.color = color;
 		this.blockSize = blockSize;
+		this.width = 22 * this.blockSize;
+		this.height = 18 * this.blockSize;
 		this.destroyed = false;
 
 		fetch('../assets/json/obstacle.json')
