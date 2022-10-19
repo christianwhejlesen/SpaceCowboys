@@ -16,7 +16,7 @@ This is my first attempt at recreating **'Space Invaders'** from Taito, most peo
 
 ---
 
-# Thanks and attributions
+## Thanks and attributions
 
 * [Devin D. Cook][devin-web-link] for the very nice [C64][devin-attr-link] font.
 * [Zachary Johnson][zachary-web-link] for the CRT scanline implementation, read the tutorial [here][zachary-attr-link]
