@@ -1,3 +1,4 @@
 *.todo
 *.drawio
+*.scss
 .vscode
