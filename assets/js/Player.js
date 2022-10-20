@@ -6,18 +6,19 @@ export default class Player {
 	doneLoadingAssets = false;
 	numberOfAssets = 0;
 	assets = null;
+	vx = 0;
+	defaultLives = 1;
+	lives = this.defaultLives;
+	yOffset = 37;
 
 	assetsToLoad = [
 		{ id: 1, var: 'image', src: '../assets/gfx/Player.png' },
 	];
 
 	constructor(canvas, bulletController, scale = 2, speed = 2) {
-		this.vx = 0;
 		this.scale = scale;
 		this.speed = speed;
 		this.canvas = canvas;
-		this.defaultLives = 3;
-		this.lives = this.defaultLives;
 		this.bulletController = bulletController;
 		this.loadAssets()
 	}
@@ -26,7 +27,7 @@ export default class Player {
 		this.height = this.image.height;
 		this.defaultX = this.canvas.width / 2 - (this.width * this.scale) / 2;
 		this.x = this.defaultX;
-		this.y = this.canvas.height - this.height * this.scale - 37;
+		this.y = this.canvas.height - this.height * this.scale - this.yOffset;
 	}
 
 	newGame() {
@@ -95,7 +96,7 @@ export default class Player {
 			this.numberOfAssets = this.assetsToLoad.length;
 
 			for (let i = 0; i < this.assetsToLoad.length; i++) {
-				if (this.assetsToLoad[i].var != undefined) {
+				if (this.assetsToLoad[i].var != undefined && this.assetsToLoad[i].src != undefined) {
 					this.beginLoadingImage(
 						this.assetsToLoad[i].var,
 						this.assetsToLoad[i].src);
@@ -113,9 +114,8 @@ export default class Player {
 
 	beginLoadingImage(imgVar, fileName) {
 		eval(`this.${imgVar} = new Image();`);
-		eval(`this.${imgVar}.src = '${fileName}';`);
-
 		eval(`this.${imgVar}`).onload = () => this.launchIfReady();
+		eval(`this.${imgVar}.src = '${fileName}';`);
 	}
 	//-----END OF ASSETSLOADER-----//
 }

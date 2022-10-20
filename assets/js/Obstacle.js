@@ -1,35 +1,27 @@
 /** @format */
 
 export default class Obstacle {
-	obstacleStates = [];
 	obstacle = [];
-	state = 0;
 	scale = 1;
+	destroyed = false;
 
-	constructor(posX, posY, color, blockSize = 3) {
+	constructor(posX, posY, color, playerBC, enemyBC, blockSize = 3) {
 		this.x = posX;
 		this.y = posY;
 		this.color = color;
+		this.playerBC = playerBC;
+		this.enemyBC = enemyBC;
 		this.blockSize = blockSize;
-		this.width = 22 * this.blockSize;
-		this.height = 18 * this.blockSize;
-		this.destroyed = false;
 
 		fetch('../assets/json/obstacle.json')
 			.then(result => result.json())
 			.then(json => {
-				this.obstacleStates = json;
-				this.readyConstructor();
+				this.fullObstacle = json;
+				this.obstacle = this.fullObstacle;
+				this.width = this.fullObstacle.map[0].length * this.blockSize;
+				this.height = this.fullObstacle.map.length * this.blockSize;
 			});
-		console.log(this.height);
-
 	}
-
-	readyConstructor() {
-		this.obstacle = this.obstacleStates.state[this.state].map;
-
-	}
-
 
 	draw(ctx) {
 		if (this.destroyed) return;
@@ -44,18 +36,39 @@ export default class Obstacle {
 	}
 
 	reset() {
-		this.state = 0;
 		this.destroyed = false;
-		this.obstacle = this.obstacleStates.state[this.state].map;
+		this.obstacle = this.fullObstacle;
 	}
 
-	hit() {
-		this.state++;
-		if (this.state >= this.obstacleStates.state.length) {
-			this.destroyed = true;
-			return;
-		}
+	// hit() {
+	// 	this.state++;
+	// 	if (this.state >= this.obstacleStates.state.length) {
+	// 		this.destroyed = true;
+	// 		return;
+	// 	}
 
-		this.obstacle = this.obstacleStates.state[this.state].map;
+	// 	this.obstacle = this.obstacleStates.state[this.state].map;
+	// }
+
+	checkBulletCollision() {
+		this.obstacle.forEach((row) => {
+			if (!obstacle.destroyed) {
+				if (this.playerBC.collideWith(obstacle) || this.enemyBC.collideWith(obstacle)) {
+					obstacle.hit();
+				}
+
+			}
+			if (!this.c) {
+				obstacle.map.forEach((row) => {
+					let rowChar = '';
+					row.forEach((col) => {
+						rowChar += col;
+					});
+					console.log(rowChar);
+				});
+				this.c = true;
+			}
+		});
 	}
+
 }

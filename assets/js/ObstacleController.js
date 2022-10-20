@@ -8,6 +8,7 @@ export default class ObstacleController {
 	obstacleBlockSize = 3;
 	obstacleWidth = 22;
 	obstacleHeight = 18;
+	gamePaused = true;
 
 
 	constructor(canvas, color, playerBC, enemyBC) {
@@ -22,25 +23,21 @@ export default class ObstacleController {
 	}
 
 	draw(ctx) {
-		this.checkBulletCollision();
-		this.obstacles.forEach((obstacle) => obstacle.draw(ctx));
+		this.obstacles.forEach((obstacle) => {
+			if (!this.gamePaused) obstacle.checkBulletCollision();
+			obstacle.draw(ctx)
+		});
 	}
 
 	createObstacles() {
 		for (let i = 0; i < 4; i++) {
-			this.obstacles.push(new Obstacle(i * this.obstacleGap + this.obstacleXoffset, this.obstacleYoffset, this.color, this.obstacleBlockSize));
+			this.obstacles.push(new Obstacle(i * this.obstacleGap + this.obstacleXoffset,
+				this.obstacleYoffset,
+				this.color,
+				this.playerBC,
+				this.enemyBC,
+				this.obstacleBlockSize));
 		}
-	}
-
-	checkBulletCollision() {
-		this.obstacles.forEach((obstacle) => {
-			if (!obstacle.destroyed) {
-				if (this.playerBC.collideWith(obstacle) || this.enemyBC.collideWith(obstacle)) {
-					obstacle.hit();
-				}
-
-			}
-		});
 	}
 
 	newGame() {

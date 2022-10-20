@@ -25,9 +25,9 @@ let gamePaused = true;
 
 //---INSTANTIATIONS---//
 const score = new ScoreController(canvas);
-const playerBC = new BulletController(canvas, 5, 'red', true, '../assets/sfx/shoot.wav');
+const playerBC = new BulletController(canvas, 5, 'red', false, '../assets/sfx/shoot.wav');
 const player = new Player(canvas, playerBC);
-const enemyBC = new BulletController(canvas, 3, 'white', true, '../assets/sfx/enemy-shoot.wav', 1);
+const enemyBC = new BulletController(canvas, 3, 'white', false, '../assets/sfx/enemy-shoot.wav', 1);
 const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
 const obstacleController = new ObstacleController(canvas, 'limegreen', playerBC, enemyBC);
 
@@ -76,6 +76,7 @@ function printText(text, maxFontSize, yOffset, color) {
 function game() {
 	requestAnimationFrame(game);
 	enemyController.gamePaused = gamePaused;
+	obstacleController.gamePaused = gamePaused;
 	draw(ctx);
 	if (player.lives === 0) {
 		printText('GAME OVER', 80, 240, 'red');
@@ -129,7 +130,7 @@ function draw(ctx) {
 	enemyBC.draw(ctx);
 
 	//Obstacle
-	obstacleController.draw(ctx);
+	// obstacleController.draw(ctx);
 
 	//Decorations
 	ctx.fillStyle = 'darkred';
