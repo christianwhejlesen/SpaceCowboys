@@ -4,15 +4,8 @@ import Direction from './Direction.js';
 import UFO from './UFO.js';
 
 export default class EnemyController {
-	//---VARIABLES--//
-	enemyMap = [
-		[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
-		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
-		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	];
 
+	//---VARIABLES--//
 	vx = 0;
 	vy = 0;
 	defaultVX = 1;
@@ -44,6 +37,13 @@ export default class EnemyController {
 	ufoYOffset = 43;
 	ufoScale = 1.5;
 
+	enemyMap = [
+		[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	];
 
 	assetsToLoad = [
 		{ id: 1, var: 'Invader_1', src: '../assets/gfx/Invader_1.png' },
@@ -93,9 +93,8 @@ export default class EnemyController {
 
 	beginLoadingImage(imgVar, fileName) {
 		eval(`this.${imgVar} = new Image();`);
-		eval(`this.${imgVar}.src = '${fileName}';`);
-
 		eval(`this.${imgVar}`).onload = () => this.launchIfReady();
+		eval(`this.${imgVar}.src = '${fileName}';`);
 	}
 	//-----END OF ASSETSLOADER-----//
 
