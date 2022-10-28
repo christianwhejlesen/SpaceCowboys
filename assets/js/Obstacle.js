@@ -5,7 +5,6 @@ export default class Obstacle {
    scale = 1;
    destroyed = false;
    ready = false;
-   totalBlocks = 0;
 
    constructor(posX, posY, color, playerBC, enemyBC, blockSize = 3) {
       this.x = posX;
@@ -19,22 +18,21 @@ export default class Obstacle {
          .then((result) => result.json())
          .then((json) => {
             this.fullObstacle = json;
-            this.obstacle = this.fullObstacle;
-            this.width = this.fullObstacle.map[0].length * this.blockSize;
-            this.height = this.fullObstacle.map.length * this.blockSize;
-            this.totalBlocks = this.countBlocks();
+            this.obstacle = [...this.fullObstacle];
+            this.width = this.fullObstacle[0].length * this.blockSize;
+            this.height = this.fullObstacle.length * this.blockSize;
             this.ready = true;
          });
    }
 
    draw(ctx) {
       if (!this.ready) return;
-      this.destroyed = this.totalBlocks !== 0 ? false : true;
+      this.destroyed = this.countBlocks() !== 0 ? false : true;
       if (this.destroyed) return;
-      for (let y = 0; y < this.obstacle.map.length; y++) {
-         for (let x = 0; x < this.obstacle.map[y].length; x++) {
+      for (let y = 0; y < this.obstacle.length; y++) {
+         for (let x = 0; x < this.obstacle[y].length; x++) {
             ctx.fillStyle = this.color;
-            if (this.obstacle.map[y][x] !== '#') continue;
+            if (this.obstacle[y][x] !== '#') continue;
             ctx.fillRect(
                x * this.blockSize * this.scale + this.x,
                y * this.blockSize * this.scale + this.y,
@@ -47,42 +45,88 @@ export default class Obstacle {
 
    reset() {
       this.destroyed = false;
-      this.obstacle = this.fullObstacle;
-      this.totalBlocks = this.countBlocks();
+      this.obstacle = [...this.fullObstacle];
    }
 
-   // hit() {
-   // 	this.state++;
-   // 	if (this.state >= this.obstacleStates.state.length) {
-   // 		this.destroyed = true;
-   // 		return;
-   // 	}
-
-   // 	this.obstacle = this.obstacleStates.state[this.state].map;
-   // }
-
    checkBulletCollision() {
-      // TODO: Change this so that it checks individual blocks
       if (!this.ready || this.destroyed) return;
-      let object = {};
-      for (let y = 0; y < this.obstacle.map.length; y++) {
-         for (let x = 0; x < this.obstacle.map[y].length; x++) {
-            object = {
+
+      for (let y = 0; y < this.obstacle.length; y++) {
+         if (!this.obstacle[y].includes('#')) continue;
+
+         for (let x = 0; x < this.obstacle[y].length; x++) {
+            if (this.obstacle[y][x] !== '#') continue;
+
+            const object = {
                x: x * this.blockSize * this.scale + this.x,
                y: y * this.blockSize * this.scale + this.y,
                width: this.blockSize * this.scale,
                height: this.blockSize * this.scale,
                scale: this.scale,
             };
+
+            if (this.enemyBC.collideWith(object) || this.playerBC.collideWith(object)) {
+               this.obstacleHit(x, y, 3);
+            }
          }
+      }
+   }
+
+   obstacleHit(x, y, damage = 3) {
+      const height = this.height / this.blockSize;
+      const width = this.width / this.blockSize;
+      let leftDamage = 0;
+      let rightDamage = 0;
+      let verticalDamage = 0;
+
+      let left = function checkLeft(d) {
+         if (x - d >= 0) {
+            leftDamage = d;
+         } else {
+            checkLeft(d - 1);
+         }
+      };
+
+      let right = function checkRight(d) {
+         if (x + d <= width) {
+            rightDamage = d;
+         } else {
+            checkRight(d - 1);
+         }
+      };
+
+      let vertical = function checkVertical(d) {
+         if (y + d <= height) {
+            verticalDamage = d;
+         } else {
+            checkVertical(d - 1);
+         }
+      };
+      vertical(damage);
+
+      for (let innerY = 0; innerY < verticalDamage; innerY++) {
+         left(damage - innerY);
+         right(damage - innerY);
+         let line = this.obstacle[y + innerY].split('');
+         let newLine = '';
+
+         for (let innerX = 0; innerX < leftDamage + rightDamage - 1; innerX++) {
+            line[innerX + x - leftDamage] = ' ';
+         }
+
+         for (let i = 0; i < this.obstacle[0].length; i++) {
+            newLine += line[i];
+         }
+
+         this.obstacle[y + innerY] = newLine;
       }
    }
 
    countBlocks() {
       let blocks = 0;
-      for (let y = 0; y < this.obstacle.map.length; y++) {
-         for (let x = 0; x < this.obstacle.map[y].length; x++) {
-            if (this.obstacle.map[y][x] === '#') {
+      for (let y = 0; y < this.obstacle.length; y++) {
+         for (let x = 0; x < this.obstacle[y].length; x++) {
+            if (this.obstacle[y][x] === '#') {
                blocks++;
             }
          }

@@ -11,12 +11,8 @@ import ObstacleController from './ObstacleController.js';
 const container = document.getElementById('ITV').getBoundingClientRect();
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-// canvas.width = 800;
-// canvas.height = 600;
 canvas.width = container.width;
 canvas.height = container.height;
-const bg = new Image();
-bg.src = '../assets/gfx/space.png';
 let beginText = true;
 const textIncrement = 1;
 let fontSize = 0;
@@ -24,18 +20,23 @@ let gamePaused = true;
 
 //---INSTANTIATIONS---//
 const score = new ScoreController(canvas);
-const playerBC = new BulletController(canvas, 5, 'red', false, '../assets/sfx/shoot.wav');
+const playerBC = new BulletController(canvas, 5, 'red', true, '../assets/sfx/shoot.wav');
 const player = new Player(canvas, playerBC);
-const enemyBC = new BulletController(canvas, 3, 'white', false, '../assets/sfx/enemy-shoot.wav', 1);
+const enemyBC = new BulletController(canvas, 3, 'white', true, '../assets/sfx/enemy-shoot.wav', 1);
 const enemyController = new EnemyController(canvas, enemyBC, playerBC, score);
 const obstacleController = new ObstacleController(canvas, 'limegreen', playerBC, enemyBC);
 
+//---LOAD BACKGROUND IMAGE---//
+const bg = new Image();
+bg.onload = () => game();
+bg.src = '../assets/gfx/space.png';
+
+//---KEYPRESS LISTENER---//
 //Short form window.addEventListener
 onkeydown = keyboardInput;
 onkeyup = keyboardInput;
 let keyPress = { key: '', type: '' };
 
-//---KEYPRESS LISTENER---//
 function keyboardInput(event) {
    keyPress.key = event.key;
    keyPress.type = event.type;
@@ -75,6 +76,7 @@ function game() {
    obstacleController.gamePaused = gamePaused;
    draw(ctx);
    if (player.lives === 0) {
+      enemyController.clearBullets();
       printText('GAME OVER', 80, 240, 'red');
       printText('PRESS R', 40, 320, 'orange');
       printText('TO RESTART', 40, 355, 'orange');
@@ -129,6 +131,3 @@ function draw(ctx) {
    ctx.fillStyle = 'darkred';
    ctx.fillRect(0, 530, canvas.width, 2);
 }
-
-//Wait for background image to load before continuing
-bg.onload = () => game();
