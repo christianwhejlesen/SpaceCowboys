@@ -28,7 +28,7 @@ This is my first attempt at recreating **'Space Invaders'** from Taito, most peo
 
 [release-badge]: https://img.shields.io/github/v/release/christianwhejlesen/SpaceCowboys?label=Release
 [release]: https://github.com/christianwhejlesen/SpaceCowboys/releases/latest
-[license-link]: https://christian-wiehlhejlesen.mit-license.org
+[license-link]: https://cwh.mit-license.org
 
 [devin-web-link]: http://www.DevinCook.com
 [devin-attr-link]: https://blogfonts.com/commodore-64-2.font
