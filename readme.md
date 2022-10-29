@@ -22,8 +22,13 @@ This is my first attempt at recreating **'Space Invaders'** from Taito, most peo
 * [Zachary Johnson][zachary-web-link] for the CRT scanline implementation, read the tutorial [here][zachary-attr-link]
 * [Evan Wallace][evan-gh-link] for the amazing glfx.js, a image effects WebGL library
 
+---
+
+## License: [MIT][license-link]
+
 [release-badge]: https://img.shields.io/github/v/release/christianwhejlesen/SpaceCowboys?label=Release
 [release]: https://github.com/christianwhejlesen/SpaceCowboys/releases/latest
+[license-link]: https://christian-wiehlhejlesen.mit-license.org
 
 [devin-web-link]: http://www.DevinCook.com
 [devin-attr-link]: https://blogfonts.com/commodore-64-2.font
