@@ -3,23 +3,20 @@
 # Space Cowboys
 
 ![Space Cowboys](assets/screen.PNG)
+*(YES It comes with an old time TV for you to play on)*
+😉
+
+[![Release][release-badge]][release]
+
+I love those old games from my childhood, so I've begone recreating them in JavaScript.
 
 This is my first attempt at recreating **'Space Invaders'** from Taito, most people probably knows it from the Atari 2600 game consol.
 
-[Space Invaders&trade;][SI-wiki-link] Wiki page
-
----
-
-# Thanks and attributions
-
-=======
 [Space Invaders][SI-wiki-link] Wiki page
 
 ---
 
 ## Thanks and attributions
-
->>>>>>> release/1.0.2
 
 * [Devin D. Cook][devin-web-link] for the very nice [C64][devin-attr-link] font.
 * [Zachary Johnson][zachary-web-link] for the CRT scanline implementation, read the tutorial [here][zachary-attr-link]
@@ -29,6 +26,8 @@ This is my first attempt at recreating **'Space Invaders'** from Taito, most peo
 
 ## License: [MIT][license-link]
 
+[release-badge]: https://img.shields.io/github/v/release/christianwhejlesen/SpaceCowboys?label=Release
+[release]: https://github.com/christianwhejlesen/SpaceCowboys/releases/latest
 [license-link]: https://cwh.mit-license.org
 
 [devin-web-link]: http://www.DevinCook.com
