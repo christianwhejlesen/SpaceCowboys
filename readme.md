@@ -3,7 +3,7 @@
 # Space Cowboys
 
 ![Space Cowboys](assets/screen.PNG)
-*(YES It comes with an old time TV for you to play on)*
+*(YES It comes with an old time TV to play on)*
 😉
 
 [![Release][release-badge]][release]
